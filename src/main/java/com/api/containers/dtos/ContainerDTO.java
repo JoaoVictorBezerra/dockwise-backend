@@ -1,7 +1,7 @@
 package com.api.containers.dtos;
 
 import com.api.containers.model.ContainerModel;
-import com.api.containers.repositories.ContainerRepository;
+import com.api.containers.repositories.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;

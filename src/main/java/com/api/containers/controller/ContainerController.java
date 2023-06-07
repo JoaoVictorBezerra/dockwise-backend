@@ -1,11 +1,11 @@
 package com.api.containers.controller;
 
 import com.api.containers.controller.advice.BusinessException;
+import com.api.containers.controller.advice.Response;
 import com.api.containers.dtos.ContainerDTO;
 import com.api.containers.model.ContainerModel;
 import com.api.containers.service.ContainerService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,6 @@ import java.util.UUID;
 @RequestMapping("/containers")
 public class ContainerController {
     final ContainerService containerService;
-
     public ContainerController(ContainerService containerService) {
         this.containerService = containerService;
     }
@@ -30,7 +29,9 @@ public class ContainerController {
         try {
             var containerModel = new ContainerModel();
             BeanUtils.copyProperties(containerDTO, containerModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body(containerService.save(containerModel));
+            containerService.save(containerModel);
+            Response responseCreated = new Response("Container registrado!", HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseCreated);
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }
@@ -55,7 +56,8 @@ public class ContainerController {
     public ResponseEntity<Object> deleteContainerById(@PathVariable(value = "id") UUID id) {
         try {
             containerService.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Container was deleted");
+            Response responseDeleted = new Response("Container was deleted", HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(responseDeleted);
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }
